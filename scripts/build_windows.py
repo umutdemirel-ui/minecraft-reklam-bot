@@ -67,4 +67,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        import traceback
+        import urllib.parse
+        detail = traceback.format_exc()
+        print(detail, flush=True)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("::error title=Windows build exception::" + urllib.parse.quote(detail[-5500:], safe=""), flush=True)
+        raise SystemExit(1)
