@@ -1,0 +1,5 @@
+# Windows runtime: Python 3.12+
+customtkinter==5.2.2
+PyAutoGUI==0.9.54
+PyGetWindow==0.0.9
+keyboard==0.13.5

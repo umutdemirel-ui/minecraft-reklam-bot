@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "window_title": "",
+  "interval_seconds": 180,
+  "message_gap_seconds": 0,
+  "server_min_interval_seconds": 180,
+  "start_delay_seconds": 10,
+  "session_limit_seconds": 0,
+  "loop": true,
+  "automation_allowed": false,
+  "default_chat_confirmed": false,
+  "max_message_length": 256,
+  "theme": "Koyu",
+  "launch_on_startup": false,
+  "hotkey": "f8"
+}

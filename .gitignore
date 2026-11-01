@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+build/
+dist/
+runtime_data/
+*.spec.bak
+*.log
+.coverage
+.idea/
+.vscode/

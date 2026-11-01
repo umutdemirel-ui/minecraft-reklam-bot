@@ -1,0 +1,53 @@
+"""Run on Windows. Produces a portable ZIP and, with --installer, a per-user setup EXE."""
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def run(command):
+    print("+", subprocess.list2cmdline([str(part) for part in command]), flush=True)
+    subprocess.run([str(part) for part in command], cwd=ROOT, check=True)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--installer", action="store_true")
+    parser.add_argument("--skip-tests", action="store_true")
+    args = parser.parse_args()
+    if os.name != "nt" or sys.version_info < (3, 12):
+        raise SystemExit("Windows ve Python 3.12+ gerekir. Linux'ta Windows EXE üretilmez.")
+    os.chdir(ROOT)
+    if not args.skip_tests:
+        run([sys.executable, "-m", "pytest", "-q"])
+    run([sys.executable, "-m", "PyInstaller", "--clean", "--noconfirm", "MinecraftAutoAdvertiser.spec"])
+    exe = ROOT / "dist" / "MinecraftAutoAdvertiser.exe"
+    if not exe.is_file():
+        raise SystemExit("PyInstaller EXE üretmedi.")
+    portable = ROOT / "dist" / "portable"
+    portable.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(exe, portable / exe.name)
+    (portable / "portable.txt").write_text("Bu dosya verileri EXE yanındaki data klasöründe tutar.\n", encoding="utf-8")
+    shutil.copy2(ROOT / "README.md", portable / "README.md")
+    archive = ROOT / "dist" / "MinecraftAutoAdvertiser-Portable-1.0.0.zip"
+    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
+        for path in portable.iterdir():
+            bundle.write(path, path.name)
+    print(f"Portable: {archive}")
+    if args.installer:
+        iscc = shutil.which("iscc") or r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+        if not Path(iscc).is_file():
+            raise SystemExit("Inno Setup 6 bulunamadı: https://jrsoftware.org/isinfo.php")
+        run([iscc, ROOT / "installer" / "setup.iss"])
+    print("Build tamamlandı. Gerçek Minecraft/sunucu kabul testi ayrıca yapılmalıdır.")
+
+
+if __name__ == "__main__":
+    main()
