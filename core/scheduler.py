@@ -138,7 +138,7 @@ class AutomationController:
             # Do not mutate an in-flight worker's rotation. Resume loads the committed list.
             if not was_sending:
                 self._rotation.reset_list(self.db.messages(active_only=True))
-                self._rotation.remaining = 0
+                # Keep the old due_at/remaining: editing the list must never bypass cooldown.
         self._publish()
 
     def preview_next(self, messages: list[Message]) -> None:

@@ -132,10 +132,27 @@ def test_message_change_resets_queue_on_resume(runtime, settings, db):
     messages = list(reversed(db.messages(active_only=True)))
     controller.messages_changed()
     assert controller.snapshot()["mode"] == "paused"
+    remaining = controller.snapshot()["remaining"]
     controller.resume(settings, messages)
-    clock.value += 4
+    clock.value += remaining + 1
     wait_for(lambda: len(engine.calls) == 2)
     assert engine.calls[1] == (messages[0].id, 300)
+
+
+def test_editing_paused_list_does_not_reset_send_cooldown(runtime, settings, db):
+    controller, backend, clock, engine, safety = runtime
+    controller.start(settings, db.messages(active_only=True))
+    wait_for(lambda: controller._rotation.due_at > 0)
+    clock.value += 4
+    wait_for(lambda: len(engine.calls) == 1)
+    wait_for(lambda: controller.snapshot()["reason"].startswith("Sonraki mesaj"))
+    clock.value += 10
+    controller.pause()
+    remaining = controller.snapshot()["remaining"]
+    db.add_message("Yeni", "İçerik", True, 180)
+    controller.messages_changed()
+    assert controller.snapshot()["remaining"] == remaining
+    assert controller.snapshot()["next_title"] == "Market"
 
 
 def test_runtime_limit_and_no_loop(runtime, settings, db):
