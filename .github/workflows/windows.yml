@@ -39,9 +39,13 @@ jobs:
         shell: pwsh
         run: |
           Expand-Archive dist/MinecraftAutoAdvertiser-Portable-1.0.0.zip -DestinationPath dist/portable-check
-          $p = Start-Process -FilePath "$PWD/dist/portable-check/MinecraftAutoAdvertiser.exe" -ArgumentList @('--smoke-test','--data-dir',"$PWD/dist/portable-data") -PassThru
+          $p = Start-Process -FilePath "$PWD/dist/portable-check/MinecraftAutoAdvertiser.exe" -ArgumentList @('--smoke-test') -PassThru
           if (-not $p.WaitForExit(45000)) { $p.Kill(); throw 'Portable EXE smoke timeout' }
-          if ($p.ExitCode -ne 0) { throw "Portable EXE exited $($p.ExitCode)" }
+          if ($p.ExitCode -ne 0) {
+            $log = Get-Content 'dist/portable-check/data/logs/application.log' -Raw -ErrorAction SilentlyContinue
+            if ($log) { Write-Output ('::error title=Portable startup::' + [Uri]::EscapeDataString($log.Substring(0, [Math]::Min(5000, $log.Length)))) }
+            throw "Portable EXE exited $($p.ExitCode)"
+          }
           if (-not (Test-Path 'dist/portable-check/data/advertiser.db')) { throw 'Portable data routing failed' }
       - name: Install and smoke-test setup output
         shell: pwsh
