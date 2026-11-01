@@ -14,7 +14,7 @@ class MessageDialog(ctk.CTkToplevel):
         super().__init__(app)
         self.app, self.message = app, message
         self.title("Mesajı düzenle" if message else "Yeni mesaj")
-        self.geometry("560x530")
+        self.geometry("560x590")
         self.resizable(False, False)
         self.attributes("-topmost", True)
         self.grab_set()

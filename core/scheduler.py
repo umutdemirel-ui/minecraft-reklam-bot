@@ -199,6 +199,8 @@ class AutomationController:
 
     def stop(self, reason: str = "Kullanıcı durdurdu.") -> None:
         with self._lock:
+            if self._mode == "running":
+                self._elapsed_base += self.clock() - self._active_since
             self._generation += 1
             self._mode, self._phase, self._reason = "stopped", "idle", reason
             self._rotation.remaining = 0

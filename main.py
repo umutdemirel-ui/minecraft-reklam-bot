@@ -53,6 +53,13 @@ def main() -> int:
         recovered = db.recover_interrupted()
         settings = db.get_settings(default_settings(paths))
         from ui.app import App
+        if args.smoke_test and os.name == "nt":
+            # Construct native adapters to verify packaging, but NEVER press a key or hook F8.
+            from core.keyboard_adapter import DesktopKeyboard
+            import keyboard
+            assert callable(keyboard.add_hotkey)
+            DesktopKeyboard()
+            log.info("Packaged native adapters loaded; no desktop input performed.")
         app = App(paths, db, settings, smoke_test=args.smoke_test)
         def unexpected_exception(kind, value, tb):
             log.error("Uncaught exception", exc_info=(kind, value, tb))

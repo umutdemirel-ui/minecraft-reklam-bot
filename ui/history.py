@@ -29,9 +29,12 @@ class History(ctk.CTkFrame):
         table_frame.pack(fill="both", expand=True, padx=24)
         style = ttk.Style(self)
         style.theme_use("clam")
-        style.configure("History.Treeview", background="#171A20", fieldbackground="#171A20",
-                        foreground="#F2F3F5", rowheight=38, borderwidth=0, font=("Segoe UI", 10))
-        style.configure("History.Treeview.Heading", background="#22262E", foreground="#AEB5C0",
+        dark = ctk.get_appearance_mode() == "Dark"
+        table_bg, table_text = ("#171A20", "#F2F3F5") if dark else ("#FFFFFF", "#171B22")
+        heading_bg, heading_text = ("#22262E", "#AEB5C0") if dark else ("#E9EBEF", "#626B78")
+        style.configure("History.Treeview", background=table_bg, fieldbackground=table_bg,
+                        foreground=table_text, rowheight=38, borderwidth=0, font=("Segoe UI", 10))
+        style.configure("History.Treeview.Heading", background=heading_bg, foreground=heading_text,
                         borderwidth=0, font=("Segoe UI", 10, "bold"))
         style.map("History.Treeview", background=[("selected", "#542B2B")], foreground=[("selected", "#FFFFFF")])
         columns = ("time", "title", "content", "status", "error")

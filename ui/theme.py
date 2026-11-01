@@ -26,6 +26,13 @@ def font(size=13, weight="normal", family=FONT):
 def apply_theme(theme: str) -> None:
     ctk.set_appearance_mode({"Koyu": "dark", "Açık": "light", "Sistem": "system"}[theme])
     ctk.set_widget_scaling(1.0)
+    # Keep default widgets on the same accent, including checkboxes and scrollbars.
+    palette = ctk.ThemeManager.theme
+    for widget, key in (("CTkCheckBox", "fg_color"), ("CTkSwitch", "progress_color"),
+                        ("CTkProgressBar", "progress_color"), ("CTkSlider", "progress_color")):
+        palette[widget][key] = [RED_HOVER, RED]
+    palette["CTkOptionMenu"]["fg_color"] = [CARD_ALT[0], CARD_ALT[1]]
+    palette["CTkOptionMenu"]["button_color"] = [RED_HOVER, RED]
 
 
 class Card(ctk.CTkFrame):

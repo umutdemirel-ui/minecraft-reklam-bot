@@ -69,7 +69,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except Exception as exc:
+    except Exception:
         import traceback
         import urllib.parse
         detail = traceback.format_exc()
