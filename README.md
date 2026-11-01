@@ -12,9 +12,9 @@
 
 ## İndir / çalıştır
 
-**Son doğrulama:** [Windows derleme 41309423967 başarılı](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309423967). Python 3.12 üzerinde 74 test, beş ekranın görünürlüğü, native adaptörlerin paketlenmesi, taşınabilir/kurulu EXE açılışı ve veri yolları doğrulandı.
+**Son doğrulama:** [Windows derleme 41309976171 başarılı](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309976171). Python 3.12 üzerinde 75 test, beş ekranın görünürlüğü, native adaptörlerin paketlenmesi, taşınabilir/kurulu EXE açılışı ve veri yolları doğrulandı.
 
-[**Windows paketlerini indir — MinecraftAutoAdvertiser-Windows**](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309423967/artifacts/13084681845) (GitHub oturumu gerekebilir; artifact yaklaşık 46 MB, 30 gün saklanır.)
+[**Windows paketlerini indir — MinecraftAutoAdvertiser-Windows**](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309976171/artifacts/13085365581) (GitHub oturumu gerekebilir; artifact yaklaşık 46 MB, 30 gün saklanır.)
 
 Paket içinde bulunur:
 
