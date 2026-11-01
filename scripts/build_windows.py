@@ -15,14 +15,23 @@ ROOT = Path(__file__).resolve().parent.parent
 def run(command):
     import urllib.parse
     print("+", subprocess.list2cmdline([str(part) for part in command]), flush=True)
-    result = subprocess.run([str(part) for part in command], cwd=ROOT, text=True,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    print(result.stdout, flush=True)
+    try:
+        result = subprocess.run([str(part) for part in command], cwd=ROOT, text=True,
+                                encoding="utf-8", errors="replace",
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output = result.stdout
+        print(output, flush=True)
+    except Exception as exc:
+        output = f"{type(exc).__name__}: {exc}"
+        print(output, flush=True)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("::error title=Windows build::" + urllib.parse.quote(output, safe=""), flush=True)
+        raise SystemExit(1) from exc
     if result.returncode:
         if os.environ.get("GITHUB_ACTIONS"):
-            tail = result.stdout[-5500:]
-            print("::error title=Windows build::" + urllib.parse.quote(tail, safe=""))
-        raise SystemExit(result.returncode)
+            tail = output[-5500:]
+            print("::error title=Windows build::" + urllib.parse.quote(tail, safe=""), flush=True)
+        raise SystemExit(1)
 
 
 def main():
