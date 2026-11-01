@@ -12,10 +12,17 @@
 
 ## İndir / çalıştır
 
-Windows doğrulama hattı başarılı olduğunda GitHub → **Actions** → **Windows tests and desktop build** → ilgili çalıştırma → **Artifacts** bölümünde `MinecraftAutoAdvertiser-Windows` bulunur:
+**Son doğrulama:** [Windows derleme 41309423967 başarılı](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309423967). Python 3.12 üzerinde 74 test, beş ekranın görünürlüğü, native adaptörlerin paketlenmesi, taşınabilir/kurulu EXE açılışı ve veri yolları doğrulandı.
+
+[**Windows paketlerini indir — MinecraftAutoAdvertiser-Windows**](https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/runs/41309423967/artifacts/13084681845) (GitHub oturumu gerekebilir; artifact yaklaşık 46 MB, 30 gün saklanır.)
+
+Paket içinde bulunur:
 
 - `MinecraftAutoAdvertiser-Setup-1.0.0.exe`: kullanıcı hesabına kurulan sürüm.
 - `MinecraftAutoAdvertiser-Portable-1.0.0.zip`: tamamını bir klasöre çıkarıp içindeki EXE'yi çalıştırın. ZIP içindeki `portable.txt` dosyasını silmeyin.
+- `SHA256SUMS.txt`: iki paketin doğrulama özeti.
+- `screenshots/`: beş ekranın izole örnek veriyle alınmış görüntüleri.
+- `test-results.xml`: Windows test sonuçları.
 
 Python, CMD veya ek bir Python paketi kurmanız gerekmez. İndirilen dosyaları yalnızca güvendiğiniz deponun kendi Actions çıktısından alın. Bu proje kod imzalama sertifikası içermez; Windows SmartScreen uyarısı verebilir. İmzasız bir dosyayı doğrulamadan çalıştırmayın.
 
