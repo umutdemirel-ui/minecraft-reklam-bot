@@ -34,8 +34,8 @@ class Card(ctk.CTkFrame):
                          border_width=1, border_color=BORDER, **kwargs)
 
 
-def label(master, text="", size=13, color=MUTED, weight="normal", **kwargs):
-    return ctk.CTkLabel(master, text=text, font=font(size, weight), text_color=color,
+def label(master, text="", size=13, color=MUTED, weight="normal", *, family=FONT, **kwargs):
+    return ctk.CTkLabel(master, text=text, font=font(size, weight, family), text_color=color,
                         anchor="w", justify="left", **kwargs)
 
 
