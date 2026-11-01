@@ -139,7 +139,9 @@ class App(ctk.CTk):
         return MessageEngine(self.db, self.controller.detector, DesktopKeyboard())
 
     def navigate(self, name):
-        self.pages[name].tkraise()
+        # CTkScrollableFrame wraps an outer frame; lift() raises that wrapper,
+        # whereas tkraise() would raise only its hidden inner canvas child.
+        self.pages[name].lift()
         self.current_page = name
         title, subtitle, _ = PAGES[name]
         self.page_title.configure(text=title)

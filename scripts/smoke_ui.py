@@ -43,6 +43,12 @@ def main():
             app.update_idletasks()
             app.update()
             assert app.pages[name].winfo_ismapped()
+            # Verify the actual visible page, not merely stacking order of inner widgets.
+            visible = app.winfo_containing(app.winfo_rootx() + 400, app.winfo_rooty() + 160)
+            page = app.pages[name]
+            while visible is not None and visible is not page and visible is not app:
+                visible = getattr(visible, "master", None)
+            assert visible is page, f"Navigation did not bring {name} to the front"
             if name == "dashboard":
                 app.update_idletasks()
                 dashboard = app.pages[name]
