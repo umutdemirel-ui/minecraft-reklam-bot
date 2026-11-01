@@ -59,6 +59,7 @@ class App(ctk.CTk):
         self.detector = detector_for_title(settings.window_title)
         self.controller = AutomationController(db, self.detector, self._engine_factory, self.safety,
                                                lambda: self.hotkeys.ready)
+        self.controller.configure(settings, self.detector)
         self.monitor = WindowMonitor(self.detector)
         self.monitor.start()
         self.protocol("WM_DELETE_WINDOW", self.close)
@@ -204,6 +205,7 @@ class App(ctk.CTk):
 
     def refresh_data(self):
         self._stats = self.db.stats()
+        self.controller.preview_next(self.db.messages(active_only=True))
         state = self.controller.snapshot()
         self.pages["dashboard"].update_view(state, self.monitor.latest, self._stats)
         self.pages["dashboard"].update_last(self.db.last_sent())

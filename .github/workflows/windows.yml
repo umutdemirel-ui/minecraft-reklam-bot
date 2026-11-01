@@ -71,6 +71,7 @@ jobs:
             dist/MinecraftAutoAdvertiser-Setup-1.0.0.exe
             dist/screenshots/
             dist/test-results.xml
+            dist/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
       - name: Upload diagnostics on failure

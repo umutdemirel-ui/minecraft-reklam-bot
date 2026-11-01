@@ -6,6 +6,10 @@
 
 > **Önemli sınır:** Uygulama bir sunucuya bağlanmaz, sunucu kurallarını okuyamaz ve mesajın sunucu tarafından kabul edildiğini doğrulayamaz. Geçmişteki **“Gönderildi\***”, “Enter tuşu tespit edilen bir giriş hatası olmadan gönderildi” anlamına gelir. Sohbet ekranının görüntüsü de doğrulanmaz. Varsayılan **T** sohbet düzeni ve gönderim sırasında açık menü bulunmaması kullanıcı tarafından onaylanmalıdır.
 
+![Windows üzerinde doğrulanmış arayüz](docs/ui-preview.png)
+
+*Windows arayüz açılış testinden gerçek ekran görüntüsü. İzole örnek veriler kullanılır; F8 smoke modunda kasıtlı olarak kaydedilmez. Normal uygulamada F8 olmadan otomasyon başlamaz.*
+
 ## İndir / çalıştır
 
 Windows doğrulama hattı başarılı olduğunda GitHub → **Actions** → **Windows tests and desktop build** → ilgili çalıştırma → **Artifacts** bölümünde `MinecraftAutoAdvertiser-Windows` bulunur:

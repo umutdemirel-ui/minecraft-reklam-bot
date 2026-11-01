@@ -13,6 +13,13 @@ def db(tmp_path):
     return Database(tmp_path / "test.db")
 
 
+def test_message_pagination_is_stable(db):
+    ids = [db.add_message(f"Mesaj {i}", "İçerik", True, 180) for i in range(90)]
+    assert [m.id for m in db.message_page(40, 0)] == ids[:40]
+    assert [m.id for m in db.message_page(40, 80)] == ids[80:]
+    assert db.message_page(40, 100) == []
+
+
 def test_settings_roundtrip_and_defaults(db):
     assert db.get_settings(Settings()) == Settings()
     changed = Settings(interval_seconds=300, automation_allowed=True)

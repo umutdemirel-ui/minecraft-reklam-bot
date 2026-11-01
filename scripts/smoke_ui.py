@@ -43,6 +43,12 @@ def main():
             app.update_idletasks()
             app.update()
             assert app.pages[name].winfo_ismapped()
+            if name == "dashboard":
+                app.update_idletasks()
+                dashboard = app.pages[name]
+                for control in (dashboard.start_button, dashboard.pause_button, dashboard.stop_button):
+                    assert control.winfo_width() > 50 and control.winfo_height() >= 30
+                    assert control.winfo_rootx() + control.winfo_width() <= app.winfo_rootx() + app.winfo_width()
             if args.screenshots:
                 x, y = app.winfo_rootx(), app.winfo_rooty()
                 image = ImageGrab.grab(bbox=(x, y, x + app.winfo_width(), y + app.winfo_height()))

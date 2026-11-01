@@ -1,5 +1,14 @@
 # Doğrulama ve sınırlar
 
+## Doğrulanmış Windows çıktısı
+
+- GitHub Actions: `Windows tests and desktop build`.
+- Python 3.12, `windows-latest`; PyInstaller tek EXE ve Inno Setup 6.
+- Beş gerçek Tk sayfası, native INPUT yapısı, taşınabilir/kurulu EXE açılışı ve veri yolları başarıyla doğrulandı.
+- Güncel sonuç ve indirilebilir paketler: https://github.com/umutdemirel-ui/minecraft-reklam-bot/actions/workflows/windows.yml
+- Paketlerin SHA-256 değerleri artifacts içindeki `SHA256SUMS.txt` dosyasındadır.
+- Aşağıdaki gerçek oyun/sunucu kontrol listesi **henüz bu ortamda doğrulanmadı**.
+
 ## Otomatik kapsam
 
 - Mesaj CRUD, Türkçe metin, uzunluk/komut engeli, sıralama.

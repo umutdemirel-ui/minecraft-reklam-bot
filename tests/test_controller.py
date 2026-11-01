@@ -53,6 +53,15 @@ def runtime(db, window, message):
     assert not controller.alive
 
 
+def test_preview_does_not_start_automation(runtime, db):
+    controller, backend, clock, engine, safety = runtime
+    controller.preview_next(db.messages(active_only=True))
+    assert controller.snapshot()["next_title"] == "Market"
+    assert controller.snapshot()["mode"] == "stopped"
+    clock.value += 1000
+    assert engine.calls == []
+
+
 def test_start_rotation_and_focus_loss_pause(runtime, settings, db, window):
     controller, backend, clock, engine, safety = runtime
     controller.start(settings, db.messages(active_only=True))

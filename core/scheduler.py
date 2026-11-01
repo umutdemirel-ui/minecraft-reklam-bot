@@ -141,6 +141,14 @@ class AutomationController:
                 self._rotation.remaining = 0
         self._publish()
 
+    def preview_next(self, messages: list[Message]) -> None:
+        """Show the first message of the next explicit Start without starting a timer."""
+        with self._lock:
+            if self._mode == "stopped":
+                self._rotation.reset_list(messages)
+                self._rotation.due_at = 0
+                self._rotation.remaining = 0
+
     def select_window(self, hwnd: int | None) -> None:
         if self.snapshot()["mode"] == "running":
             raise SafetyError("Hedefi değiştirmeden önce otomasyonu duraklatın.")

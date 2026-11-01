@@ -19,8 +19,9 @@ STATE_LABELS = {
 }
 
 
-class Dashboard(ctk.CTkFrame):
+class Dashboard(ctk.CTkScrollableFrame):
     def __init__(self, master, app):
+        # Small displays scroll instead of clipping Start/Pause/Stop below the viewport.
         super().__init__(master, fg_color="transparent")
         self.app = app
         self.grid_columnconfigure(0, weight=1)
@@ -29,10 +30,10 @@ class Dashboard(ctk.CTkFrame):
         self._syncing = False
 
         connection = Card(self)
-        connection.grid(row=0, column=0, sticky="ew", padx=24, pady=(8, 16))
+        connection.grid(row=0, column=0, sticky="ew", padx=24, pady=(4, 12))
         connection.grid_columnconfigure(0, weight=1)
         left = ctk.CTkFrame(connection, fg_color="transparent")
-        left.grid(row=0, column=0, sticky="nsew", padx=20, pady=18)
+        left.grid(row=0, column=0, sticky="nsew", padx=20, pady=12)
         label(left, "CANLI BAĞLANTI", 10, MUTED, "bold").pack(anchor="w")
         self.connection_label = label(left, "Minecraft aranıyor…", 23, TEXT, "bold")
         self.connection_label.pack(anchor="w", pady=(7, 3))
@@ -46,7 +47,7 @@ class Dashboard(ctk.CTkFrame):
         self.phase_label = label(right, "Otomasyon beklemede", 11)
         self.phase_label.pack(anchor="e")
         select_row = ctk.CTkFrame(connection, fg_color="transparent")
-        select_row.grid(row=1, column=0, columnspan=2, sticky="ew", padx=20, pady=(0, 16))
+        select_row.grid(row=1, column=0, columnspan=2, sticky="ew", padx=20, pady=(0, 12))
         select_row.grid_columnconfigure(1, weight=1)
         label(select_row, "Hedef", 12).grid(row=0, column=0, padx=(0, 12))
         self.window_menu = ctk.CTkOptionMenu(select_row, values=["Otomatik tespit"],
@@ -58,7 +59,7 @@ class Dashboard(ctk.CTkFrame):
         button(select_row, "Yenile", app.refresh_windows, width=76).grid(row=0, column=2, padx=(10, 0))
 
         metrics = ctk.CTkFrame(self, fg_color="transparent")
-        metrics.grid(row=1, column=0, sticky="ew", padx=24, pady=(0, 16))
+        metrics.grid(row=1, column=0, sticky="ew", padx=24, pady=(0, 12))
         self.metrics = {}
         for index, (key, caption, value) in enumerate([
             ("messages", "KAYITLI MESAJ", "0"), ("sent", "BU OTURUMDA GÖNDERİLEN", "0"),
@@ -67,9 +68,9 @@ class Dashboard(ctk.CTkFrame):
             metrics.grid_columnconfigure(index, weight=1, uniform="metrics")
             card = Card(metrics)
             card.grid(row=0, column=index, sticky="ew", padx=(0 if index == 0 else 6, 0 if index == 3 else 6))
-            label(card, caption, 9, MUTED, "bold").pack(anchor="w", padx=16, pady=(15, 5))
+            label(card, caption, 9, MUTED, "bold").pack(anchor="w", padx=16, pady=(10, 3))
             metric = label(card, value, 27, TEXT, "bold", family=MONO)
-            metric.pack(anchor="w", padx=16, pady=(0, 14))
+            metric.pack(anchor="w", padx=16, pady=(0, 9))
             self.metrics[key] = metric
 
         body = ctk.CTkFrame(self, fg_color="transparent")
@@ -92,23 +93,21 @@ class Dashboard(ctk.CTkFrame):
 
         controls = Card(body)
         controls.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
-        label(controls, "OTOMASYON KONTROLÜ", 10, MUTED, "bold").pack(anchor="w", padx=20, pady=(20, 12))
-        self.status_label = label(controls, "Durduruldu", 20, TEXT, "bold")
-        self.status_label.pack(anchor="w", padx=20)
+        label(controls, "OTOMASYON KONTROLÜ", 10, MUTED, "bold").pack(anchor="w", padx=18, pady=(12, 6))
+        self.status_label = label(controls, "Durduruldu", 18, TEXT, "bold")
+        self.status_label.pack(anchor="w", padx=18)
         self.reason_label = label(controls, "Başlatmak için hazır", 12, wraplength=215)
-        self.reason_label.pack(anchor="w", fill="x", padx=20, pady=(6, 16))
+        self.reason_label.pack(anchor="w", fill="x", padx=18, pady=(3, 8))
         self.start_button = button(controls, "Başlat", app.start, primary=True)
-        self.start_button.pack(fill="x", padx=20, pady=(0, 8))
+        self.start_button.pack(fill="x", padx=18, pady=(0, 6))
         row = ctk.CTkFrame(controls, fg_color="transparent")
-        row.pack(fill="x", padx=20)
+        row.pack(fill="x", padx=18)
         row.grid_columnconfigure((0, 1), weight=1)
         self.pause_button = button(row, "Duraklat", app.pause, width=100)
         self.pause_button.grid(row=0, column=0, sticky="ew", padx=(0, 4))
         self.stop_button = button(row, "Durdur", app.stop, danger=True, width=100)
         self.stop_button.grid(row=0, column=1, sticky="ew", padx=(4, 0))
-        label(controls, "F8  ·  Her zaman acil durdurur", 11, RED, "bold").pack(anchor="w", padx=20, pady=(16, 6))
-        label(controls, "Başlattıktan sonra Minecraft'ı öne getirin. Odak kaybında otomatik devam edilmez.",
-              11, wraplength=215).pack(anchor="w", padx=20, pady=(0, 18))
+        label(controls, "F8  ·  Her zaman acil durdurur", 11, RED, "bold").pack(anchor="w", padx=18, pady=(10, 12))
 
         bottom = ctk.CTkFrame(self, fg_color="transparent")
         bottom.grid(row=3, column=0, sticky="ew", padx=24, pady=(0, 18))
@@ -137,7 +136,7 @@ class Dashboard(ctk.CTkFrame):
                            ("total", stats["sent"]), ("elapsed", clock(state["elapsed"]))):
             self.metrics[key].configure(text=str(value))
         self.next_title.configure(text=state["next_title"])
-        self.next_content.configure(text=state["next_content"])
+        self.next_content.configure(text=state["next_content"][:180] + ("…" if len(state["next_content"]) > 180 else ""))
         self.next_interval.configure(text=f"Sonraki gönderim aralığı: {state['next_interval']} sn" if state["next_interval"] else "")
         self.status_label.configure(text={"running": "Çalışıyor", "paused": "Duraklatıldı", "stopped": "Durduruldu"}[state["mode"]])
         self.reason_label.configure(text=state["reason"])

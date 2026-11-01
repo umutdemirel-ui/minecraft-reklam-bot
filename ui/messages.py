@@ -84,6 +84,8 @@ class Messages(ctk.CTkScrollableFrame):
     def __init__(self, master, app):
         super().__init__(master, fg_color="transparent")
         self.app = app
+        self.page = 0
+        self.page_size = 40
         top = ctk.CTkFrame(self, fg_color="transparent")
         top.pack(fill="x", padx=14, pady=(8, 16))
         self.summary = label(top, "Mesaj kuyruğu", 13)
@@ -93,13 +95,21 @@ class Messages(ctk.CTkScrollableFrame):
               12, wraplength=780).pack(anchor="w", padx=14, pady=(0, 14))
         self.list = ctk.CTkFrame(self, fg_color="transparent")
         self.list.pack(fill="both", expand=True, padx=14)
+        navigation = ctk.CTkFrame(self, fg_color="transparent")
+        navigation.pack(fill="x", padx=14, pady=12)
+        self.page_label = label(navigation, "", 12)
+        self.page_label.pack(side="left")
+        button(navigation, "→", lambda: self.turn(1), width=40).pack(side="right")
+        button(navigation, "←", lambda: self.turn(-1), width=40).pack(side="right", padx=6)
         self.refresh()
 
     def refresh(self):
         for child in self.list.winfo_children():
             child.destroy()
-        messages = self.app.db.messages()
-        self.summary.configure(text=f"{len(messages)} mesaj  /  {sum(m.active for m in messages)} etkin")
+        stats = self.app.db.stats()
+        messages = self.app.db.message_page(self.page_size, self.page * self.page_size)
+        self.summary.configure(text=f'{stats["messages"]} mesaj  /  {stats["active"]} etkin')
+        self.page_label.configure(text=f"Sayfa {self.page + 1} · {len(messages)} mesaj gösteriliyor")
         if not messages:
             empty = Card(self.list)
             empty.pack(fill="x", pady=8)
@@ -107,8 +117,15 @@ class Messages(ctk.CTkScrollableFrame):
             label(empty, "Başlık verin, sohbet metnini yazın ve gönderim aralığını seçin.\n"
                   "Örnek: Marketim açıldı! Uygun fiyatlar için beklerim.", 13, wraplength=650).pack(anchor="w", padx=24, pady=(0, 20))
             button(empty, "+  Mesaj ekle", lambda: MessageDialog(self.app), primary=True).pack(anchor="w", padx=24, pady=(0, 24))
-        for index, message in enumerate(messages, 1):
+        for index, message in enumerate(messages, self.page * self.page_size + 1):
             self._row(index, message)
+
+    def turn(self, direction):
+        count = self.app.db.stats()["messages"]
+        if direction > 0 and (self.page + 1) * self.page_size >= count:
+            return
+        self.page = max(0, min(self.page + direction, (count - 1) // self.page_size))
+        self.refresh()
 
     def _row(self, index, message):
         card = Card(self.list)

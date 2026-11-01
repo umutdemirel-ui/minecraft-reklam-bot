@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import shutil
 import subprocess
@@ -63,6 +64,15 @@ def main():
         if not Path(iscc).is_file():
             raise SystemExit("Inno Setup 6 bulunamadı: https://jrsoftware.org/isinfo.php")
         run([iscc, ROOT / "installer" / "setup.iss"])
+    artifacts = [archive]
+    if args.installer:
+        artifacts.append(ROOT / "dist" / "MinecraftAutoAdvertiser-Setup-1.0.0.exe")
+    checksums = []
+    for artifact in artifacts:
+        digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        checksums.append(f"{digest}  {artifact.name}")
+        print(f"SHA256 {artifact.name}: {digest}")
+    (ROOT / "dist" / "SHA256SUMS.txt").write_text("\n".join(checksums) + "\n", encoding="utf-8")
     print("Build tamamlandı. Gerçek Minecraft/sunucu kabul testi ayrıca yapılmalıdır.")
 
 

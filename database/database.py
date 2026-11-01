@@ -111,6 +111,12 @@ class Database:
         with self.connection() as conn:
             return [Message.from_row(row) for row in conn.execute(sql)]
 
+    def message_page(self, limit: int = 40, offset: int = 0) -> list[Message]:
+        """Bound UI widget creation even when the user has thousands of messages."""
+        with self.connection() as conn:
+            return [Message.from_row(row) for row in conn.execute(
+                "SELECT * FROM messages ORDER BY id LIMIT ? OFFSET ?", (limit, offset))]
+
     def add_message(self, title: str, content: str, active: bool, interval: int,
                     max_length: int = 256) -> int:
         title, content, interval = validate_message(title, content, interval, max_length)
