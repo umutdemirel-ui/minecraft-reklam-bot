@@ -13,8 +13,16 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def run(command):
+    import urllib.parse
     print("+", subprocess.list2cmdline([str(part) for part in command]), flush=True)
-    subprocess.run([str(part) for part in command], cwd=ROOT, check=True)
+    result = subprocess.run([str(part) for part in command], cwd=ROOT, text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    print(result.stdout, flush=True)
+    if result.returncode:
+        if os.environ.get("GITHUB_ACTIONS"):
+            tail = result.stdout[-5500:]
+            print("::error title=Windows build::" + urllib.parse.quote(tail, safe=""))
+        raise SystemExit(result.returncode)
 
 
 def main():
