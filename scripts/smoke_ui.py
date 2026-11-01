@@ -53,4 +53,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        import traceback
+        import urllib.parse
+        detail = traceback.format_exc()
+        print(detail)
+        # GitHub's annotation API remains accessible even when artifact CDN downloads are not.
+        print("::error title=UI smoke::" + urllib.parse.quote(detail, safe="")[:6000])
+        raise
